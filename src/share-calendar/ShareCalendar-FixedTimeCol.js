@@ -7,6 +7,7 @@ function FixedCol({ rowHeight }) {
                 Array(24).fill(null).map((item, index) => {
                     return (
                         <div
+                            key={index}
                             style={{
                                 height: rowHeight,
                                 width: '100%',

@@ -11,10 +11,12 @@ function TimeFrame({ rowHeight }) {
                             boxSizing: 'border-box',
                             MozBoxSizing: 'border-box',
                             WebkitBoxSizing: 'border-box',
-                            borderTop: '1px solid black',
+                            borderTop: '1px solid grey',
                             height: rowHeight,
                             width: '100%'
-                        }}>
+                        }}
+                            key={index}
+                        >
 
                         </div>
                     )
