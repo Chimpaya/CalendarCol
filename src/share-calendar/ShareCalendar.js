@@ -62,6 +62,8 @@ const sampleData = [{
         finish: '2020/02/02 12:34'
     }]
 }]
+
+//Plan dang hien thi random vi tri (xem Component SHareCalendar-Bar.js)
 function ShareCalendar() {
     let containerRef = useRef(null)
     const renderDailyPlans = () => {

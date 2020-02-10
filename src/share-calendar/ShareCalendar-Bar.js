@@ -1,6 +1,7 @@
 import React from 'react'
 import { getBarTitle } from './ShareCalendar-title_helper'
 
+
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -16,7 +17,7 @@ function Bar({ type, color, data, index }) {
       <div style={{
         width: '100%',
         height: getRandomInt(60, 100),
-        top: getRandomInt(90 * index, 170 * index),
+        top: getRandomInt(90 * index, 170 * index),//random vi tri va do dai cua plan
         backgroundColor: color,
         position: 'absolute',
         padding: 10,
