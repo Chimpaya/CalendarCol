@@ -81,61 +81,38 @@ function ShareCalendar() {
     }
 
     return (
-        <div style={{
-            width: '100%',
-            height: '100%',
-        }}>
-            <div style={{
+
+        <ScrollContainer
+            horizontal={true}
+            vertical={true}
+            hideScrollbars={false}
+            style={{
+                width: '100%',
                 display: 'flex',
-                height: '100%',
-                flexDirection: 'row',
-                overflowY: 'auto',
-                paddingTop: 10,
-                paddingLeft: 10,
-                width: '100%'
-            }}>
-                <div style={{ width: 50, marginTop: 50 }}>
+                flexGrow: 1,
+                height: '100%'
+            }}
+            ref={containerRef}
+        >
+            <div style={{ height: rowHeight * 24 + navHeight + 20, zIndex: 99, minWidth: '100%', display: 'flex', flexDirection: 'row', position: 'relative' }}>
+                <div style={{ width: 50, height: '100%', top: 50, left: 0, position: 'absolute' }}>
                     <FixedCol rowHeight={rowHeight} />
                 </div>
-                <ScrollContainer
-                    horizontal={true}
-                    vertical={false}
-                    hideScrollbars={false}
-                    style={{
+                <div style={{ marginLeft: 50, flexGrow: 1, position: 'relative', display: 'flex', flexDirection: 'row', }}>
+                    <div style={{
+                        position: 'absolute',
+                        top: navHeight,
+                        left: 0,
                         width: '100%',
-                        display: 'flex',
-                        flexGrow: 1,
-                        height: rowHeight * 24 + navHeight + 20,
-                        overflowX: 'auto',
-                        overflowY: 'hidden',
-                    }}
-                    ref={containerRef}
-                >
-                    <div style={{ width: 'auto', position: 'relative', minWidth: '100%' }}>
-                        <div style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '100%',
-                            // border: '1px solid red',
-                            boxSizing: 'border-box',
-                            MozBoxSizing: 'border-box',
-                            WebkitBoxSizing: 'border-box',
-                            marginTop: navHeight
-                        }}>
-                            <TimeFrame rowHeight={rowHeight} />
-                        </div>
-                        <div style={{ height: '100%', zIndex: 99, minWidth: '100%', width: 'auto', display: 'flex', flexDirection: 'row' }}>
-                            {renderDailyPlans()}
-                        </div>
+                    }}>
+                        <TimeFrame rowHeight={rowHeight} />
                     </div>
-                </ScrollContainer>
-
+                    {renderDailyPlans()}
+                    <div style={{ height: '100%', width: 9000 }}>
+                    </div>
+                </div>
             </div>
-
-        </div >
-
-
+        </ScrollContainer >
     )
 }
 

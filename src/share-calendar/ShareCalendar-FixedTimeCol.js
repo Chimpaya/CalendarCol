@@ -11,14 +11,13 @@ function FixedCol({ rowHeight }) {
                             style={{
                                 height: rowHeight,
                                 width: '100%',
-                                position: 'relative',
                                 alignItems: 'flex-top'
                             }}>
                             <div
                                 style={{
                                     position: 'absolute',
-                                    top: -10,
-                                    right: '20%'
+                                    marginTop: -10,
+                                    marginRight: '20%'
                                 }}>
                                 {`${index}:00`}
                             </div>
