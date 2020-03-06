@@ -1,12 +1,10 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import TimeFrame from './ShareCalendar-TimeFrame'
 import FixedCol from './ShareCalendar-FixedTimeCol'
 import './ShareCalendar.css'
 import ScrollContainer from 'react-indiana-drag-scroll'
 import BarColumn from './ShareCalendar-BarColumn'
-
-const rowHeight = 50
-const navHeight = 50
+import Separators from './ShareCalendar-Separators'
 
 const sampleData = [{
     name: 'user1',
@@ -63,9 +61,41 @@ const sampleData = [{
     }]
 }]
 
-//Plan dang hien thi random vi tri (xem Component SHareCalendar-Bar.js)
 function ShareCalendar() {
     let containerRef = useRef(null)
+    const [containerMeasure, setContainerMeasure] = useState({
+        width: 0,
+        height: 0,
+        isAtTop: true
+    })
+    const [uiConst, setUIConst] = useState({
+        navHeight: 50,
+        colWidth: 50,
+        rowHeight: 60
+    })
+    const { navHeight, colWidth, rowHeight } = uiConst
+
+    useEffect(() => {
+        if (!containerRef)
+            return
+        const { current: { container: { current } } } = containerRef
+        setContainerMeasure(containerMeasure => ({
+            ...containerMeasure,
+            width: current.clientWidth,
+            height: current.clientHeight
+        }))
+    }, [containerRef])
+
+    const onEndScroll = (left, top, width, height) => {
+        if (top > 0 && containerMeasure.isAtTop)
+            setContainerMeasure({ ...containerMeasure, isAtTop: false })
+
+        if (top == 0 && !containerMeasure.isAtTop)
+            setContainerMeasure({ ...containerMeasure, isAtTop: true })
+    }
+    const onStartScroll = () => {
+        setContainerMeasure({ ...containerMeasure, isAtTop: false })
+    }
     const renderDailyPlans = () => {
         const transformedData = sampleData.map(userData => {
             return {
@@ -81,38 +111,74 @@ function ShareCalendar() {
     }
 
     return (
-
         <ScrollContainer
             horizontal={true}
-            vertical={true}
+            vertical={false}
             hideScrollbars={false}
+            ref={containerRef}
             style={{
                 width: '100%',
-                display: 'flex',
-                flexGrow: 1,
-                height: '100%'
+                height: '100%',
+                position: 'relative'
             }}
-            ref={containerRef}
+            onStartScroll={onStartScroll}
+            onEndScroll={onEndScroll}
         >
-            <div style={{ height: rowHeight * 24 + navHeight + 20, zIndex: 99, minWidth: '100%', display: 'flex', flexDirection: 'row', position: 'relative' }}>
-                <div style={{ width: 50, height: '100%', top: 50, left: 0, position: 'absolute' }}>
-                    <FixedCol rowHeight={rowHeight} />
-                </div>
-                <div style={{ marginLeft: 50, flexGrow: 1, position: 'relative', display: 'flex', flexDirection: 'row', }}>
+            <div style={{
+                height: 'max-content',
+                zIndex: 99,
+                minWidth: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                position: 'relative',
+                width: 'max-content',
+                backgroundColor: 'white',
+            }}
+            >
+                <Separators
+                    containerMeasure={containerMeasure}
+                    navHeight={navHeight}
+                    colWidth={colWidth}
+                />
+
+                <div style={{
+                    width: 'auto',
+                    minWidth: '100%',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    position: 'relative',
+                    backgroundColor: 'white',
+                    zIndex: 2,
+                    height: 'max-content'
+                }}>
+                    <div style={{
+                        width: colWidth,
+                        height: '100%',
+                        left: 0,
+                        position: 'sticky',
+                        backgroundColor: 'inherit',
+                        zIndex: 100,
+                    }}>
+                        <FixedCol rowHeight={rowHeight} />
+                    </div>
                     <div style={{
                         position: 'absolute',
-                        top: navHeight,
-                        left: 0,
+                        left: colWidth,
                         width: '100%',
+                        zIndex: 1,
+                        top: 0
                     }}>
                         <TimeFrame rowHeight={rowHeight} />
                     </div>
-                    {renderDailyPlans()}
-                    <div style={{ height: '100%', width: 9000 }}>
+                    <div style={{ flexGrow: 1, width: 'max-content', height: 'auto', display: 'flex', flexDirection: 'row', position: 'relative' }}>
+                        <div style={{ width: 100, height: '100%' }}>
+
+                        </div>
                     </div>
                 </div>
+
             </div>
-        </ScrollContainer >
+        </ScrollContainer>
     )
 }
 

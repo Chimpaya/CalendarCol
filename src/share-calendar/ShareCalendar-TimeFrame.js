@@ -11,7 +11,7 @@ function TimeFrame({ rowHeight }) {
                             boxSizing: 'border-box',
                             MozBoxSizing: 'border-box',
                             WebkitBoxSizing: 'border-box',
-                            borderTop: '1px solid grey',
+                            borderTop: index == 0 ? null : '1.5px solid gainsboro',
                             height: rowHeight,
                             width: '100%'
                         }}
@@ -26,4 +26,4 @@ function TimeFrame({ rowHeight }) {
     )
 }
 
-export default TimeFrame
+export default React.memo(TimeFrame)

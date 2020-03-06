@@ -11,16 +11,20 @@ function FixedCol({ rowHeight }) {
                             style={{
                                 height: rowHeight,
                                 width: '100%',
-                                alignItems: 'flex-top'
+                                alignItems: 'flex-top',
                             }}>
                             <div
                                 style={{
                                     position: 'absolute',
                                     marginTop: -10,
-                                    marginRight: '20%'
+                                    marginRight: '20%',
+                                    color: 'grey',
+                                    fontWeight: 'bold'
                                 }}>
-                                {`${index}:00`}
+                                {index == 0 ? null : `${index}:00`}
                             </div>
+
+
                         </div>
                     )
                 })
@@ -29,4 +33,4 @@ function FixedCol({ rowHeight }) {
     )
 }
 
-export default FixedCol
+export default React.memo(FixedCol)
