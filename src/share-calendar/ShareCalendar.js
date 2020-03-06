@@ -4,7 +4,9 @@ import FixedCol from './ShareCalendar-FixedTimeCol'
 import './ShareCalendar.css'
 import ScrollContainer from 'react-indiana-drag-scroll'
 import BarColumn from './ShareCalendar-BarColumn'
-import Separators from './ShareCalendar-Separators'
+import NavBar from './ShareCalendar-NavBar'
+import Separators from './ShareCalendar-Separtors'
+import useStyles from './ShareCalendar-Style'
 
 const sampleData = [{
     name: 'user1',
@@ -62,23 +64,37 @@ const sampleData = [{
 }]
 
 function ShareCalendar() {
-    let containerRef = useRef(null)
-    const [containerMeasure, setContainerMeasure] = useState({
+
+    /* variables */
+
+    //states
+    const [containerMeasure, setContainerMeasure] = useState({ //measure of scrollContainer, use for rendering Separators
         width: 0,
         height: 0,
         isAtTop: true
     })
     const [uiConst, setUIConst] = useState({
-        navHeight: 50,
-        colWidth: 50,
-        rowHeight: 60
+        navHeight: 50,          //height of navBar
+        colWidth: 50,           //width of fixed time col
+        rowHeight: 60           //height of each time frame
     })
+    //styles
+    const classes = useStyles.ShareCalendar(uiConst)
+    //refs
+    let containerRef = useRef(null)
+    //destructure variables
     const { navHeight, colWidth, rowHeight } = uiConst
 
+    /* End of variables */
+
+
+    /* useEffect hooks */
+
+    //set scrollContainer measurements
     useEffect(() => {
         if (!containerRef)
             return
-        const { current: { container: { current } } } = containerRef
+        const { current } = containerRef
         setContainerMeasure(containerMeasure => ({
             ...containerMeasure,
             width: current.clientWidth,
@@ -86,6 +102,13 @@ function ShareCalendar() {
         }))
     }, [containerRef])
 
+    /* End of useEffect hooks */
+
+
+    /* Handlers */
+
+    //onScroll handlers for scrollContainer
+    //detect when scrollContainer is scrolled to the top
     const onEndScroll = (left, top, width, height) => {
         if (top > 0 && containerMeasure.isAtTop)
             setContainerMeasure({ ...containerMeasure, isAtTop: false })
@@ -96,89 +119,45 @@ function ShareCalendar() {
     const onStartScroll = () => {
         setContainerMeasure({ ...containerMeasure, isAtTop: false })
     }
-    const renderDailyPlans = () => {
-        const transformedData = sampleData.map(userData => {
-            return {
-                col_info: userData,
-                col_data: userData.user_plans,
-                col_color: userData.color
-            }
-        })
 
-        return transformedData.map((col, index) => {
-            return <BarColumn key={index} columnData={col} barType={'plan'} labelType={'user'} />
-        })
-    }
+    /* End of Handlers */
+
 
     return (
-        <ScrollContainer
-            horizontal={true}
-            vertical={false}
-            hideScrollbars={false}
+        <div
             ref={containerRef}
-            style={{
-                width: '100%',
-                height: '100%',
-                position: 'relative'
-            }}
-            onStartScroll={onStartScroll}
-            onEndScroll={onEndScroll}
+            className={classes.scrollContainer}
         >
-            <div style={{
-                height: 'max-content',
-                zIndex: 99,
-                minWidth: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                position: 'relative',
-                width: 'max-content',
-                backgroundColor: 'white',
-            }}
-            >
-                <Separators
-                    containerMeasure={containerMeasure}
-                    navHeight={navHeight}
-                    colWidth={colWidth}
-                />
-
-                <div style={{
-                    width: 'auto',
-                    minWidth: '100%',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    position: 'relative',
-                    backgroundColor: 'white',
-                    zIndex: 2,
-                    height: 'max-content'
-                }}>
-                    <div style={{
-                        width: colWidth,
-                        height: '100%',
-                        left: 0,
-                        position: 'sticky',
-                        backgroundColor: 'inherit',
-                        zIndex: 100,
-                    }}>
+            <Separators
+                containerMeasure={containerMeasure}
+                navHeight={navHeight}
+                colWidth={colWidth}
+            />
+            <NavBar
+                navHeight={navHeight}
+                colWidth={colWidth}
+            />
+            <ScrollContainer
+                horizontal={true}
+                vertical={false}
+                hideScrollbars={false}
+                style={{ flexGrow: 1, width: '100%', overflowY: 'auto' }}>
+                <div className={classes.calendarContainer}>
+                    <div className={classes.fixedcolContainer}>
                         <FixedCol rowHeight={rowHeight} />
                     </div>
-                    <div style={{
-                        position: 'absolute',
-                        left: colWidth,
-                        width: '100%',
-                        zIndex: 1,
-                        top: 0
-                    }}>
+                    <div className={classes.timeframeContainer}>
                         <TimeFrame rowHeight={rowHeight} />
                     </div>
-                    <div style={{ flexGrow: 1, width: 'max-content', height: 'auto', display: 'flex', flexDirection: 'row', position: 'relative' }}>
-                        <div style={{ width: 100, height: '100%' }}>
+                    <div className={classes.columnContainer}>
+                        <div style={{ width: 2000, height: '100%' }}>
 
                         </div>
                     </div>
                 </div>
+            </ScrollContainer>
 
-            </div>
-        </ScrollContainer>
+        </div>
     )
 }
 
